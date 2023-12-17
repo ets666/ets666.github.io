@@ -23,6 +23,16 @@ jobs:
       with:
         curl: -k -o ./api/random_jobs_ats/index.html --create-dirs ${{ secrets.RANDOM_JOBS_ATS_API_URL }}
 
+    - name: curl
+      uses: enflo/curl-action@master
+      with:
+        curl: -k -o ./api/jobsync/index.html --create-dirs ${{ secrets.JOBSYNC_API_URL }}
+        
+    - name: curl
+      uses: enflo/curl-action@master
+      with:
+        curl: -k -o ./api/jobsync_ats/index.html --create-dirs ${{ secrets.JOBSYNC_ATS_API_URL }}
+
     - name: commit
       run: |
         git config --local user.email "${{ secrets.USER_EMAIL }}"
