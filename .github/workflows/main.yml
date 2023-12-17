@@ -1,0 +1,37 @@
+name: Update Random Jobs
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '1 1,3,5,7,9,11,13,15,17,19,21,23 * * *'
+
+jobs:
+  update_random_jobs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+
+    - name: curl
+      uses: enflo/curl-action@master
+      with:
+        curl: -k -o ./api/random_jobs/index.html --create-dirs ${{ secrets.RANDOM_JOBS_API_URL }}
+        
+    - name: curl
+      uses: enflo/curl-action@master
+      with:
+        curl: -k -o ./api/random_jobs_ats/index.html --create-dirs ${{ secrets.RANDOM_JOBS_ATS_API_URL }}
+
+    - name: commit
+      run: |
+        git config --local user.email "${{ secrets.USER_EMAIL }}"
+        git config --local user.name "${{ secrets.USER_NAME }}"
+        git commit -m "Update Random Jobs" ./
+
+    - name: push
+      uses: ad-m/github-push-action@master
+      with:
+        branch: master
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        force: true
